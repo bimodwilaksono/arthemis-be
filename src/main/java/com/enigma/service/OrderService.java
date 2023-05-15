@@ -4,6 +4,7 @@ import com.enigma.model.Campsite;
 import com.enigma.model.Order;
 import com.enigma.repository.CampsiteRepository;
 import com.enigma.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class OrderService {
     private OrderRepository orderRepository;
     private CampsiteRepository campsiteRepository;
 
+    @Autowired
     public OrderService(OrderRepository orderRepository, CampsiteRepository campsiteRepository) {
         this.orderRepository = orderRepository;
         this.campsiteRepository = campsiteRepository;
@@ -62,7 +64,7 @@ public class OrderService {
 
             return orderRepository.save(existsOrder);
         }catch (Exception e){
-            throw new RuntimeException(""+e.getMessage());
+            throw new RuntimeException("Failed to Update order, "+e.getMessage());
         }
     }
 

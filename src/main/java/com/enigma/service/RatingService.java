@@ -3,6 +3,7 @@ package com.enigma.service;
 import com.enigma.model.Rating;
 import com.enigma.repository.OrderRepository;
 import com.enigma.repository.RatingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class RatingService {
     private RatingRepository ratingRepository;
     private OrderRepository orderRepository;
 
+    @Autowired
     public RatingService(RatingRepository ratingRepository, OrderRepository orderRepository) {
         this.ratingRepository = ratingRepository;
         this.orderRepository = orderRepository;

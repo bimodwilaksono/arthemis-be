@@ -4,6 +4,7 @@ import com.enigma.model.Order;
 import com.enigma.model.Payment;
 import com.enigma.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class PaymentService {
     private PaymentRepository paymentRepository;
     private OrderService orderService;
 
+    @Autowired
     public PaymentService(PaymentRepository paymentRepository, OrderService orderService) {
         this.paymentRepository = paymentRepository;
         this.orderService = orderService;
