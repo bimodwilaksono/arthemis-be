@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class Order {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private Integer id;
 
     private String status;

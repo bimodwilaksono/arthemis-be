@@ -1,10 +1,6 @@
 package com.enigma.model;
 
 import jakarta.persistence.*;
-<<<<<<< Updated upstream
-import jakarta.validation.constraints.Email;
-=======
->>>>>>> Stashed changes
 import lombok.Data;
 
 @Entity
@@ -12,7 +8,7 @@ import lombok.Data;
 @Data
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private Long id;
     @Column(name = "name",nullable = false)
     private String name;

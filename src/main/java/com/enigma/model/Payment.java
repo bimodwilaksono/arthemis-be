@@ -13,6 +13,7 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor
 public class Payment {
     @Id @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private Integer id;
     @Column(name = "payment_method")
     @NotBlank(message = "Payment method should be filled")
