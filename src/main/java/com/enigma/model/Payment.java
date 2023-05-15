@@ -24,4 +24,7 @@ public class Payment {
     @Column(name = "status")
     @NotBlank(message = "status should be filled")
     private String status;
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    private Order order;
 }

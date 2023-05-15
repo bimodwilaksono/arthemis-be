@@ -13,7 +13,9 @@ public class Rating {
     private int score;
     private String Comment;
     @ManyToOne
+    @JoinColumn(name = "campsite_id")
     private Campsite campsite;
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 }
