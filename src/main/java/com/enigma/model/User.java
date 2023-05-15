@@ -1,7 +1,10 @@
 package com.enigma.model;
 
 import jakarta.persistence.*;
+<<<<<<< Updated upstream
 import jakarta.validation.constraints.Email;
+=======
+>>>>>>> Stashed changes
 import lombok.Data;
 
 @Entity
