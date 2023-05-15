@@ -28,8 +28,10 @@ public class Order {
     private User user;
 
     //OneToOne with Campsite
-//    @OneToOne
-//    private Campsite campsite
+    @OneToOne
+    @JoinColumn(name = "campsite_id", referencedColumnName = "id")
+    private Campsite campsite;
+
 
     //OneToOne with Payment
 //    @OneToOne
