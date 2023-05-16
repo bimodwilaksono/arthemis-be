@@ -34,9 +34,9 @@ public class Order {
     private Campsite campsite;
 
 
-    //OneToOne with Payment
-//    @OneToOne
-//    private Payment payment
+//    //OneToOne with Payment
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
 
 
 }
