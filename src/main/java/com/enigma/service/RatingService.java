@@ -1,5 +1,6 @@
 package com.enigma.service;
 
+import com.enigma.model.Order;
 import com.enigma.model.Rating;
 import com.enigma.repository.OrderRepository;
 import com.enigma.repository.RatingRepository;
@@ -15,8 +16,8 @@ import java.util.List;
 @Service
 public class RatingService {
 
-    private RatingRepository ratingRepository;
-    private OrderRepository orderRepository;
+    private final RatingRepository ratingRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
     public RatingService(RatingRepository ratingRepository, OrderRepository orderRepository) {
@@ -62,10 +63,14 @@ public class RatingService {
             }
 
             // Validasi apakah user sudah memberikan rating untuk order ini
-            boolean isRatingExist = ratingRepository.existsByCampsite_OrderAndUserAndCampsite(rating.getCampsite().getOrder(), rating.getUser(), rating.getCampsite());
-            if (isRatingExist) {
-                throw new RuntimeException("User sudah memberikan rating untuk order ini");
+            List<Order> orders = rating.getCampsite().getOrder();
+            for (Order order : orders) {
+                boolean isRatingExist = ratingRepository.existsByCampsite_OrderAndUserAndCampsite(order, rating.getUser(), rating.getCampsite());
+                if (isRatingExist) {
+                    throw new RuntimeException("User sudah memberikan rating untuk order ini");
+                }
             }
+
 
             return ratingRepository.save(rating);
         }catch (Exception e){

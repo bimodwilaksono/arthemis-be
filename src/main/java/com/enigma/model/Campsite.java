@@ -19,8 +19,8 @@ public class Campsite {
 
     private String location;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Order order;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Order> order;
 
     @OneToMany(mappedBy = "campsite")
     private List<Rating> ratings;

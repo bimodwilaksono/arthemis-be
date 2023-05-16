@@ -29,7 +29,7 @@ public class Order {
     private User user;
 
     //OneToOne with Campsite
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "campsite_id", referencedColumnName = "id")
     private Campsite campsite;
 
