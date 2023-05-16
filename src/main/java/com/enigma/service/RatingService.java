@@ -4,6 +4,10 @@ import com.enigma.model.Rating;
 import com.enigma.repository.OrderRepository;
 import com.enigma.repository.RatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +24,14 @@ public class RatingService {
         this.orderRepository = orderRepository;
     }
 
-    public List<Rating> findAll(){
+    public Page<Rating> findAll(
+            Integer page, Integer size,
+            String direction, String sort
+    ){
         try{
-            List<Rating> ratings = ratingRepository.findAll();
+            Sort sortBy = Sort.by(Sort.Direction.valueOf(direction), sort);
+            Pageable pageable = PageRequest.of((page-1),size,sortBy);
+            Page<Rating> ratings = ratingRepository.findAll(pageable);
             if (ratings.isEmpty()){
                 throw new RuntimeException("Database Empty");
             }
@@ -32,7 +41,7 @@ public class RatingService {
         }
     }
 
-    public Rating findById(Long id){
+    public Rating findById(String id){
         try {
             return ratingRepository.findById(id).orElseThrow(()->new RuntimeException("id "+id+" Does Not Exists"));
         }catch (Exception e){
@@ -64,7 +73,7 @@ public class RatingService {
         }
     }
 
-    public Rating update(Long id, Rating rating){
+    public Rating update(String id, Rating rating){
         try{
             Rating updateRating = findById(id);
             updateRating.setScore(rating.getScore());
@@ -78,7 +87,7 @@ public class RatingService {
         }
     }
 
-    public void delete(Long id){
+    public void delete(String id){
         try {
             Rating rating = findById(id);
             ratingRepository.delete(rating);

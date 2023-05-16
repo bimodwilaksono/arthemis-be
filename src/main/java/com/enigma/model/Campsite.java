@@ -13,7 +13,7 @@ import java.util.List;
 public class Campsite {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Integer id;
+    private String id;
 
     private String name;
 

@@ -14,7 +14,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Integer id;
+    private String id;
 
     private String status;
 

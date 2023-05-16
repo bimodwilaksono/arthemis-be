@@ -5,6 +5,10 @@ import com.enigma.model.Payment;
 import com.enigma.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +25,14 @@ public class PaymentService {
         this.orderService = orderService;
     }
 
-    public List<Payment> findAll(){
+    public Page<Payment> findAll(
+            Integer page, Integer size,
+            String direction, String sort
+    ){
         try{
-            List<Payment> payments = paymentRepository.findAll();
+            Sort sortBy = Sort.by(Sort.Direction.valueOf(direction), sort);
+            Pageable pageable = PageRequest.of((page-1),size,sortBy);
+            Page<Payment> payments = paymentRepository.findAll(pageable);
             if (payments.isEmpty()){
                 throw new RuntimeException("Database Empty");
             }
@@ -33,7 +42,7 @@ public class PaymentService {
         }
     }
 
-    public Payment findById(Integer id){
+    public Payment findById(String id){
         try{
             return paymentRepository.findById(id).orElseThrow(() -> new RuntimeException("id "+ id + " Does Not exists"));
         }catch (Exception e){
@@ -51,7 +60,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public Payment update(Integer id, Payment payment){
+    public Payment update(String id, Payment payment){
         try {
             Payment existingPayment = findById(id);
             existingPayment.setPaymentMethod(payment.getPaymentMethod());
@@ -64,7 +73,7 @@ public class PaymentService {
         }
     }
 
-    public void delete(Integer id){
+    public void delete(String id){
         try{
             Payment payment = findById(id);
             paymentRepository.delete(payment);

@@ -5,6 +5,10 @@ import com.enigma.model.Order;
 import com.enigma.repository.CampsiteRepository;
 import com.enigma.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +25,14 @@ public class OrderService {
         this.campsiteRepository = campsiteRepository;
     }
 
-    public List<Order> findAll(){
+    public Page<Order> findAll(
+            Integer page, Integer size,
+            String direction, String sort
+    ){
         try{
-            List<Order> orders = orderRepository.findAll();
+            Sort sortBy = Sort.by(Sort.Direction.valueOf(direction), sort);
+            Pageable pageable = PageRequest.of((page-1),size,sortBy);
+            Page<Order> orders = orderRepository.findAll(pageable);
             if (orders.isEmpty()){
                 throw new RuntimeException("Database Empty");
             }
@@ -33,7 +42,7 @@ public class OrderService {
         }
     }
 
-    public Order findById(Integer id){
+    public Order findById(String id){
         try{
             return orderRepository.findById(id).orElseThrow(() -> new RuntimeException("id "+ id + " Does Not exists"));
         }catch (Exception e){
@@ -53,7 +62,7 @@ public class OrderService {
         }
     }
 
-    public Order update(Integer id, Order order){
+    public Order update(String id, Order order){
         try {
             Order existsOrder = findById(id);
             existsOrder.setStatus(order.getStatus());
@@ -68,7 +77,7 @@ public class OrderService {
         }
     }
 
-    public void delete(Integer id){
+    public void delete(String id){
         try {
             Order order = findById(id);
             orderRepository.delete(order);

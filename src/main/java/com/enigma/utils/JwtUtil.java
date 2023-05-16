@@ -8,9 +8,9 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    @Value("${jwt.secret}")
+    @Value("Token")
     private String JwtSecret;
-    @Value("${jwt.expiration}")
+    @Value("600000")
     private Integer JwtExpiration;
 
     public String generateToken(String subject){

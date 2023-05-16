@@ -9,7 +9,7 @@ import lombok.Data;
 public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Long id;
+    private String id;
     private int score;
     private String Comment;
     @ManyToOne
