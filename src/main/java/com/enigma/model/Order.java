@@ -16,7 +16,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String status;
+    private Boolean isCheckOut;
 
     @Column(name = "checkin_date")
     private LocalDate checkInDate;
