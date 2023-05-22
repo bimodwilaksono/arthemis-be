@@ -54,7 +54,7 @@ public class CampsiteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteCamp(@PathVariable String id){
         campsiteService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success deleting campsite",null));

@@ -1,16 +1,15 @@
 package com.enigma.controller;
 
+import com.enigma.model.DTO.ChangeUserRoleRequest;
 import com.enigma.model.DTO.LoginRequest;
 import com.enigma.model.DTO.RegisterRequest;
+import com.enigma.model.User;
 import com.enigma.model.response.SuccessResponse;
 import com.enigma.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -32,5 +31,18 @@ public class AuthController {
     public ResponseEntity login(@RequestBody LoginRequest loginRequest){
         String token = authService.login(loginRequest);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Login Success", token));
+    }
+
+    @PostMapping("/login-admin")
+    public ResponseEntity loginAdmin(@RequestBody LoginRequest loginRequest) {
+        String token = authService.loginAdmin(loginRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Login Success", token));
+    }
+
+
+    @PutMapping("/user-role")
+    public ResponseEntity changeUserRole(@RequestBody ChangeUserRoleRequest changeUserRoleRequest){
+        User updatedUser = authService.changeUserRole(changeUserRoleRequest.getUserId(), changeUserRoleRequest.getNewRole());
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("User role updated", updatedUser));
     }
 }

@@ -55,4 +55,36 @@ public class AuthService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public String loginAdmin(LoginRequest loginRequest) {
+        try {
+            User user = userRepository.findByEmailIgnoreCase(loginRequest.getEmail())
+                    .orElseThrow(() -> new RuntimeException("email or password is incorrect"));
+
+            if (!user.getPassword().equals(loginRequest.getPassword())) {
+                throw new RuntimeException("email or password is incorrect");
+            }
+
+            // Check if the user role is admin
+            if (!user.getRole().equals(Role.Admin)) {
+                throw new RuntimeException("You do not have admin privileges");
+            }
+
+            String token = jwtUtil.generateToken(loginRequest.getEmail(), user.getRole());
+            return token;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+
+    public User changeUserRole(String userId, Role newRole){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setRole(newRole);
+
+
+        return userRepository.save(user);
+    }
 }

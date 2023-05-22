@@ -1,9 +1,13 @@
 package com.enigma.service;
 
 import com.enigma.model.Campsite;
+import com.enigma.model.DTO.OrderRequest;
 import com.enigma.model.Order;
+import com.enigma.model.User;
 import com.enigma.repository.CampsiteRepository;
 import com.enigma.repository.OrderRepository;
+import com.enigma.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,11 +22,16 @@ import java.util.Optional;
 public class OrderService {
     private OrderRepository orderRepository;
     private CampsiteRepository campsiteRepository;
+    private UserRepository userRepository;
 
-    @Autowired
-    public OrderService(OrderRepository orderRepository, CampsiteRepository campsiteRepository) {
+    private final ModelMapper modelMapper;
+
+
+    public OrderService(OrderRepository orderRepository, CampsiteRepository campsiteRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.orderRepository = orderRepository;
         this.campsiteRepository = campsiteRepository;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
     }
 
     public Page<Order> findAll(
@@ -50,26 +59,53 @@ public class OrderService {
         }
     }
 
-    public Order save(Order order){
+    public Order save(OrderRequest orderDto) {
         try{
-            Optional<Campsite> campsite = campsiteRepository.findById(order.getCampsite().getId());
-            if (campsite.isEmpty()){
-                throw new RuntimeException("Failed to find camp with id " + order.getCampsite().getId());
+            Optional<User> userOptional = userRepository.findById(orderDto.getUserId());
+            if (userOptional.isEmpty()){
+                throw new RuntimeException("User not found with id " + orderDto.getUserId());
             }
+
+            Optional<Campsite> campsiteOptional = campsiteRepository.findById(orderDto.getCampsiteId());
+            if (campsiteOptional.isEmpty()){
+                throw new RuntimeException("Campsite not found with id " + orderDto.getCampsiteId());
+            }
+
+            Order order = modelMapper.map(orderDto, Order.class);
+            order.setUser(userOptional.get());
+            order.setCampsite(campsiteOptional.get());
+            Campsite campsite = campsiteOptional.get();
+            campsite.getOrder().add(order);
+
+            // save the updated campsite
+            campsiteRepository.save(campsite);
+
             return orderRepository.save(order);
-        }catch (Exception e){
+        } catch (Exception e){
             throw new RuntimeException("Failed to save order: "+e.getMessage());
         }
     }
 
-    public Order update(String id, Order order){
+
+    public Order update(String id, OrderRequest orderDto){
         try {
-            Order existsOrder = findById(id);
-            existsOrder.setIsCheckOut(order.getIsCheckOut());
-            existsOrder.setCheckInDate(order.getCheckInDate());
-            existsOrder.setCheckOutDate(order.getCheckOutDate());
-            existsOrder.setUser(order.getUser());
-            existsOrder.setCampsite(order.getCampsite());
+            Order existsOrder = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+
+            User user = userRepository.findById(orderDto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+            Campsite campsite = campsiteRepository.findById(orderDto.getCampsiteId()).orElseThrow(() -> new RuntimeException("Campsite not found"));
+
+            // update fields from orderDto to existsOrder, and set user and campsite
+            existsOrder.setIsCheckOut(orderDto.getIsCheckOut());
+            existsOrder.setCheckInDate(orderDto.getCheckInDate());
+            existsOrder.setCheckOutDate(orderDto.getCheckOutDate());
+            existsOrder.setUser(user);
+            existsOrder.setCampsite(campsite);
+
+            // add the updated order to the campsite's order list
+            campsite.getOrder().add(existsOrder);
+
+            // save the updated campsite
+            campsiteRepository.save(campsite);
 
             return orderRepository.save(existsOrder);
         }catch (Exception e){

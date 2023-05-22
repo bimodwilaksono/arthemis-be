@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, String> {
+    boolean existsByUserAndCampsiteAndIsCheckOut(User user, Campsite campsite, Boolean isCheckOut);
 
     boolean existsByUserAndCampsite(User user, Campsite campsite);
 
-    boolean existsByUserAndCampsiteAndStatus(User user, Campsite campsite, String checkedOut);
 }

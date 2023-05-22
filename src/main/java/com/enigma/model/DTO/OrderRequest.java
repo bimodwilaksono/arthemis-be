@@ -10,14 +10,17 @@ import java.time.LocalDate;
 
 @Data
 public class OrderRequest {
-    @NotBlank
+    private String id;
+
+    private Boolean isCheckOut;
+
     private LocalDate checkInDate;
-    @NotBlank
+
     private LocalDate checkOutDate;
-    @NotBlank
-    private User user;
-    @NotBlank
-    private Campsite campsite;
-    @NotBlank
+
+    private String userId;
+
+    private String campsiteId;
+
     private Payment payment;
 }

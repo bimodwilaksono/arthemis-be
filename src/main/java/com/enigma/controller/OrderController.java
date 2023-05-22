@@ -1,6 +1,7 @@
 package com.enigma.controller;
 
 import com.enigma.model.Campsite;
+import com.enigma.model.DTO.OrderRequest;
 import com.enigma.model.Order;
 import com.enigma.model.response.CommonResponse;
 import com.enigma.model.response.SuccessResponse;
@@ -41,17 +42,19 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity createOrder(@RequestBody Order order){
-        Order createdOrder = orderService.save(order);
+    public ResponseEntity createOrder(@RequestBody OrderRequest orderDto){
+        Order createdOrder = orderService.save(orderDto);
         CommonResponse commonResponse = new SuccessResponse<>("Success Creating new Order", createdOrder);
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
+
     @PutMapping("/{id}")
-    public ResponseEntity updateOrder(@PathVariable("id") String id, @RequestBody Order order){
-        Order updatedorder = orderService.update(id, order);
-        CommonResponse commonResponse = new SuccessResponse<>("Success updating Order", updatedorder);
-        return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
+    public ResponseEntity updateOrder(@PathVariable("id") String id, @RequestBody OrderRequest orderRequest){
+        Order updatedOrder = orderService.update(id, orderRequest);
+        CommonResponse commonResponse = new SuccessResponse<>("Success updating Order", updatedOrder);
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
+
 
     @DeleteMapping
     public ResponseEntity deleteOrder(@PathVariable String id){

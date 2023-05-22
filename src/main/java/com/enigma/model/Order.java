@@ -1,5 +1,6 @@
 package com.enigma.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -26,11 +27,13 @@ public class Order {
 
     //Many To Many with Customer
     @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     //OneToOne with Campsite
     @ManyToOne
     @JoinColumn(name = "campsite_id", referencedColumnName = "id")
+    @JsonBackReference
     private Campsite campsite;
 
 

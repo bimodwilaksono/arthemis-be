@@ -23,6 +23,7 @@ public class SimpleInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
     public SimpleInterceptor(AdminOnlyEndpointsConfig config) {
         this.ADMIN_ONLY_URIS = config.getAdminOnlyUris();
     }
@@ -33,7 +34,7 @@ public class SimpleInterceptor implements HandlerInterceptor {
             return true;
         }
         String token = request.getHeader("Authorization");
-        if (token == null) throw new RuntimeException("Token tidak ada");
+        if (token == null) throw new RuntimeException("Token Needed");
         String[] bearerToken = token.split(" ");
         if (!jwtUtil.validateToken(bearerToken[1])){
             throw new RuntimeException("Invalid Token");

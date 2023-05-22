@@ -57,7 +57,7 @@ public class RatingService {
                 throw new RuntimeException("User belum pernah melakukan order di campsite ini");
             }
             // Validasi apakah user sudah checkout
-            boolean isUserCheckedOut = orderRepository.existsByUserAndCampsiteAndStatus(rating.getUser(), rating.getCampsite(), "CHECKED_OUT");
+            boolean isUserCheckedOut = orderRepository.existsByUserAndCampsiteAndIsCheckOut(rating.getUser(), rating.getCampsite(), true);
             if (!isUserCheckedOut) {
                 throw new RuntimeException("User belum checkout di campsite ini");
             }
@@ -77,6 +77,7 @@ public class RatingService {
             throw new RuntimeException("Failed to create rating, "+e.getMessage());
         }
     }
+
 
     public Rating update(String id, Rating rating){
         try{
