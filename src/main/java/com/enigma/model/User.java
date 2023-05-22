@@ -1,5 +1,6 @@
 package com.enigma.model;
 
+import com.enigma.utils.constants.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,4 +17,6 @@ public class User {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
+    @Column(name = "role", nullable = false)
+    private Role role;
 }

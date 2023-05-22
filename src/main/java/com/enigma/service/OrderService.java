@@ -65,7 +65,7 @@ public class OrderService {
     public Order update(String id, Order order){
         try {
             Order existsOrder = findById(id);
-            existsOrder.setStatus(order.getStatus());
+            existsOrder.setIsCheckOut(order.getIsCheckOut());
             existsOrder.setCheckInDate(order.getCheckInDate());
             existsOrder.setCheckOutDate(order.getCheckOutDate());
             existsOrder.setUser(order.getUser());

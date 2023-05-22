@@ -1,5 +1,6 @@
 package com.enigma.utils;
 
+import com.enigma.utils.constants.Role;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,9 +14,10 @@ public class JwtUtil {
     @Value("600000")
     private Integer JwtExpiration;
 
-    public String generateToken(String subject){
+    public String generateToken(String subject, Role role){
         JwtBuilder builder = Jwts.builder()
                 .setSubject(subject)
+                .claim("role", role.toString())
                 .setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS256, JwtSecret)
                 .setExpiration(new Date(System.currentTimeMillis() + JwtExpiration));
@@ -38,5 +40,10 @@ public class JwtUtil {
         } catch (SignatureException e){
             throw new RuntimeException("Invalid JWT signature");
         }
+    }
+
+    public Role getRoleFromToken(String token){
+        Claims claims = Jwts.parser().setSigningKey(JwtSecret).parseClaimsJws(token).getBody();
+        return Role.valueOf(claims.get("role",String.class));
     }
 }

@@ -5,6 +5,7 @@ import com.enigma.model.DTO.RegisterRequest;
 import com.enigma.model.User;
 import com.enigma.repository.UserRepository;
 import com.enigma.utils.JwtUtil;
+import com.enigma.utils.constants.Role;
 import jakarta.persistence.EntityExistsException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,10 @@ public class AuthService {
     public String register(RegisterRequest registerRequest){
         try{
             User user = modelMapper.map(registerRequest, User.class);
+            user.setRole(Role.User);
             User userRequest = userRepository.save(user);
 
-            String token = jwtUtil.generateToken(user.getEmail());
+            String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
             return token;
         }catch (DataAccessException e){
             throw new EntityExistsException(e.getMessage());
@@ -47,7 +49,7 @@ public class AuthService {
             if (!user.getPassword().equals(loginRequest.getPassword())) {
                 throw new RuntimeException("email or password is incorrect");
             }
-            String token = jwtUtil.generateToken(loginRequest.getEmail());
+            String token = jwtUtil.generateToken(loginRequest.getEmail(), user.getRole());
             return token;
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
