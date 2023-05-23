@@ -1,6 +1,5 @@
 package com.enigma.controller;
 
-import com.enigma.model.Campsite;
 import com.enigma.model.DTO.OrderRequest;
 import com.enigma.model.Order;
 import com.enigma.model.response.CommonResponse;

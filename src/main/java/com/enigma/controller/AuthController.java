@@ -20,7 +20,6 @@ public class AuthController {
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
-
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequest registerRequest){
         String token = authService.register(registerRequest);

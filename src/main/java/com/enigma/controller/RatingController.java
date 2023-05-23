@@ -1,12 +1,8 @@
 package com.enigma.controller;
 
-import com.enigma.model.DTO.RegisterRequest;
-import com.enigma.model.Payment;
 import com.enigma.model.Rating;
 import com.enigma.model.response.CommonResponse;
 import com.enigma.model.response.SuccessResponse;
-import com.enigma.service.AuthService;
-import com.enigma.service.PaymentService;
 import com.enigma.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

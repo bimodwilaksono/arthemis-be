@@ -1,4 +1,9 @@
 spring:
+  swagger:
+    enabled : true
+  mvc:
+    path-match:
+      matching-strategy: ant_path_matcher
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}

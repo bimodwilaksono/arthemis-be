@@ -13,4 +13,6 @@ public class BeanConfiguration {
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return mapper;
     }
+
+
 }
