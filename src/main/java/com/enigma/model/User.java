@@ -22,6 +22,5 @@ public class User {
     private String ProfilePic;
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    @JsonIgnore
     private Role role;
 }

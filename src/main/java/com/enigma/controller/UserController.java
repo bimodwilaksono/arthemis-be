@@ -48,7 +48,7 @@ public class UserController {
     }
 
 
-    @PutMapping("/{id}")
+    @PatchMapping("/update-email/{id}")
     public ResponseEntity updateUser(@PathVariable("id") String id, @RequestBody ChangeUserNameEmailRequest user){
         User updateUser = modelMapper.map(user, User.class);
         userService.updateNameAndEmail(id, user);
@@ -56,7 +56,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/update-profile/{id}")
     public ResponseEntity updateProfileUser(@PathVariable("id") String id, @Valid ProfileUploadRequest userRequest){
         User UpdateProfile = modelMapper.map(userRequest, User.class);
         userService.UpdateProfile(id, userRequest);
@@ -64,7 +64,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
 
-    @PatchMapping("{/id}")
+    @PatchMapping("/change-password/{id}")
     public ResponseEntity updatPassword(@PathVariable("id") String id, @RequestBody ChangePassword changePassword){
         User updatePassword = modelMapper.map(changePassword, User.class);
         userService.updatePassword(id, changePassword);
