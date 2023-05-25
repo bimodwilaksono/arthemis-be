@@ -1,9 +1,15 @@
 package com.enigma.controller;
 
+import ch.qos.logback.core.model.Model;
+import com.enigma.model.DTO.ProfileUploadRequest;
+import com.enigma.model.DTO.UserRequest;
 import com.enigma.model.User;
 import com.enigma.model.response.CommonResponse;
 import com.enigma.model.response.SuccessResponse;
 import com.enigma.service.UserService;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +20,16 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final ModelMapper modelMapper;
 
-    public UserController(UserService userService) {
+    @Autowired
+    public UserController(UserService userService, ModelMapper modelMapper) {
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping
-    public ResponseEntity getAllCamps(
+    public ResponseEntity getAllUsers(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(defaultValue = "ASC") String direction,
@@ -32,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getCampById(@PathVariable("id") String id){
+    public ResponseEntity getUserById(@PathVariable("id") String id){
         User user = userService.findById(id);
         CommonResponse commonResponse = new SuccessResponse<>("Success Finding user with id: "+id, user);
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
@@ -40,15 +49,24 @@ public class UserController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity updateCamp(@PathVariable("id") String id, @RequestBody User user){
-        User updateUser = userService.update(id, user);
-        CommonResponse commonResponse = new SuccessResponse<>("Success updating product", updateUser);
+    public ResponseEntity updateUser(@PathVariable("id") String id, @RequestBody UserRequest user){
+        User updateUser = modelMapper.map(user, User.class);
+        userService.update(id, user);
+        CommonResponse commonResponse = new SuccessResponse<>("Success updating user", updateUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity updateProfileUser(@PathVariable("id") String id, @Valid ProfileUploadRequest userRequest){
+        User UpdateProfile = modelMapper.map(userRequest, User.class);
+        userService.UpdateProfile(id, userRequest);
+        CommonResponse commonResponse = new SuccessResponse<>("Success Updating user profile",UpdateProfile);
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteCamp(@PathVariable String id){
+    public ResponseEntity deleteUser(@PathVariable String id){
         userService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success deleting campsite",null));
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success deleting user",null));
     }
 }

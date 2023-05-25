@@ -33,9 +33,6 @@ public class RatingService {
             Sort sortBy = Sort.by(Sort.Direction.valueOf(direction), sort);
             Pageable pageable = PageRequest.of((page-1),size,sortBy);
             Page<Rating> ratings = ratingRepository.findAll(pageable);
-            if (ratings.isEmpty()){
-                throw new RuntimeException("Database Empty");
-            }
             return ratings;
         }catch (Exception e){
             throw new RuntimeException("Failed to get all rating, "+ e.getMessage());

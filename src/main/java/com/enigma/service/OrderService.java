@@ -42,9 +42,6 @@ public class OrderService {
             Sort sortBy = Sort.by(Sort.Direction.valueOf(direction), sort);
             Pageable pageable = PageRequest.of((page-1),size,sortBy);
             Page<Order> orders = orderRepository.findAll(pageable);
-            if (orders.isEmpty()){
-                throw new RuntimeException("Database Empty");
-            }
             return orders;
         }catch (Exception e){
             throw new RuntimeException("Failed to find all orders: "+e.getMessage());

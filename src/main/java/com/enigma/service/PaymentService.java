@@ -33,9 +33,6 @@ public class PaymentService {
             Sort sortBy = Sort.by(Sort.Direction.valueOf(direction), sort);
             Pageable pageable = PageRequest.of((page-1),size,sortBy);
             Page<Payment> payments = paymentRepository.findAll(pageable);
-            if (payments.isEmpty()){
-                throw new RuntimeException("Database Empty");
-            }
             return payments;
         }catch (Exception e){
             throw new RuntimeException("Failed to find all Payment" + e.getMessage());

@@ -45,9 +45,6 @@ public class CampsiteService {
             Sort sortBy = Sort.by(Sort.Direction.valueOf(direction), sort);
             Pageable pageable = PageRequest.of(page-1,size, sortBy);
             Page<Campsite> campsiteList = (Page<Campsite>) campsiteRepository.findAll(pageable);
-            if (campsiteList.isEmpty()){
-                throw new RuntimeException("Database Empty");
-            }
             return campsiteList;
         }catch (Exception e){
             throw new RuntimeException("Failed to find all camp: "+ e.getMessage());
@@ -88,12 +85,11 @@ public class CampsiteService {
             if (!campsiteRequest.getFile().isEmpty()){
                 filePath = fileService.uploadFile(campsiteRequest.getFile());
             }
-            existingCamp.setName(existingCamp.getName());
-            existingCamp.setAddress(existingCamp.getAddress());
-            existingCamp.setProvince(existingCamp.getProvince());
+            existingCamp.setName(campsiteRequest.getName());
+            existingCamp.setAddress(campsiteRequest.getAddress());
+            existingCamp.setProvince(campsiteRequest.getProvince());
             existingCamp.setFile(filePath);
-            existingCamp.setRatings(existingCamp.getRatings());
-            existingCamp.setOrder(existingCamp.getOrder());
+
 
             return campsiteRepository.save(existingCamp);
         }catch (Exception e){

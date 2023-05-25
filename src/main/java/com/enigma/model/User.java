@@ -1,6 +1,7 @@
 package com.enigma.model;
 
 import com.enigma.utils.constants.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,8 +17,11 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     private String password;
+    private String ProfilePic;
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private Role role;
 }

@@ -1,6 +1,8 @@
 package com.enigma.service;
 
 import com.enigma.model.Campsite;
+import com.enigma.model.DTO.ProfileUploadRequest;
+import com.enigma.model.DTO.UserRequest;
 import com.enigma.model.User;
 import com.enigma.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final FileService fileService;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, FileService fileService) {
         this.userRepository = userRepository;
+        this.fileService = fileService;
     }
 
     public Page<User> findAll(
@@ -27,9 +31,6 @@ public class UserService {
             Sort sortBy = Sort.by(Sort.Direction.valueOf(direction), sort);
             Pageable pageable = PageRequest.of(page-1,size, sortBy);
             Page<User> userList = (Page<User>) userRepository.findAll(pageable);
-            if (userList.isEmpty()){
-                throw new RuntimeException("Database Empty");
-            }
             return userList;
         }catch (Exception e){
             throw new RuntimeException("Failed to find all user: "+ e.getMessage());
@@ -44,7 +45,7 @@ public class UserService {
         }
     }
 
-    public User update(String id, User user){
+    public User update(String id, UserRequest user){
         try {
             User existingUser = findById(id);
             existingUser.setName(user.getName());
@@ -53,6 +54,21 @@ public class UserService {
             return userRepository.save(existingUser);
         }catch (Exception e){
             throw new RuntimeException("Filed to update user: "+e.getMessage());
+        }
+    }
+
+    public User UpdateProfile(String id, ProfileUploadRequest user){
+        try {
+            User existingUser = findById(id);
+            String filePath = "";
+
+            if (!user.getProfilePic().isEmpty()){
+                filePath = fileService.uploadFile(user.getProfilePic());
+            }
+            existingUser.setProfilePic(filePath);
+            return userRepository.save(existingUser);
+        }catch (Exception e){
+            throw new RuntimeException("Failed to update Profile: "+e.getMessage());
         }
     }
 
