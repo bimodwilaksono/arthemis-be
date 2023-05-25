@@ -18,7 +18,11 @@ public class Campsite {
 
     private String name;
 
-    private String location;
+    private String address;
+
+    private String province;
+
+    private String file;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JsonManagedReference

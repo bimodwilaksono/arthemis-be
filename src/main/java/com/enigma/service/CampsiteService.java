@@ -1,7 +1,12 @@
 package com.enigma.service;
 
 import com.enigma.model.Campsite;
+import com.enigma.model.DTO.CampsiteRequest;
+import com.enigma.model.Order;
+import com.enigma.model.Rating;
 import com.enigma.repository.CampsiteRepository;
+import com.enigma.repository.OrderRepository;
+import com.enigma.repository.RatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,16 +14,27 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CampsiteService {
 
-    private CampsiteRepository campsiteRepository;
+    private final CampsiteRepository campsiteRepository;
+    private final OrderRepository orderRepository;
+    private final RatingRepository ratingRepository;
+    private final FileService fileService;
 
     @Autowired
-    public CampsiteService(CampsiteRepository campsiteRepository) {
+    public CampsiteService(CampsiteRepository campsiteRepository,
+                           OrderRepository orderRepository,
+                           RatingRepository ratingRepository,
+                           FileService fileService) {
         this.campsiteRepository = campsiteRepository;
+        this.orderRepository = orderRepository;
+        this.ratingRepository = ratingRepository;
+        this.fileService = fileService;
     }
 
     public Page<Campsite> findAll(
@@ -46,25 +62,42 @@ public class CampsiteService {
         }
     }
 
-    public Campsite save(Campsite campsite){
+    public Campsite save(CampsiteRequest campsiteRequest){
         try{
+            String filePath = "";
+
+            if (!campsiteRequest.getFile().isEmpty()){
+                filePath = fileService.uploadFile(campsiteRequest.getFile());
+            }
+            Campsite campsite = new Campsite();
+            campsite.setName(campsiteRequest.getName());
+            campsite.setAddress(campsiteRequest.getAddress());
+            campsite.setProvince(campsiteRequest.getProvince());
+            campsite.setFile(filePath);
             return campsiteRepository.save(campsite);
         }catch (Exception e){
             throw new RuntimeException("Failed to save camp: "+ e.getMessage());
         }
     }
 
-    public Campsite update(String id, Campsite campsite){
+    public Campsite update(String id, CampsiteRequest campsiteRequest){
         try {
             Campsite existingCamp = findById(id);
-            existingCamp.setName(campsite.getName());
-            existingCamp.setLocation(campsite.getLocation());
-            existingCamp.setRatings(campsite.getRatings());
-            existingCamp.setOrder(campsite.getOrder());
+            String filePath = "";
+
+            if (!campsiteRequest.getFile().isEmpty()){
+                filePath = fileService.uploadFile(campsiteRequest.getFile());
+            }
+            existingCamp.setName(existingCamp.getName());
+            existingCamp.setAddress(existingCamp.getAddress());
+            existingCamp.setProvince(existingCamp.getProvince());
+            existingCamp.setFile(filePath);
+            existingCamp.setRatings(existingCamp.getRatings());
+            existingCamp.setOrder(existingCamp.getOrder());
 
             return campsiteRepository.save(existingCamp);
         }catch (Exception e){
-            throw new RuntimeException("Fieled to update camp: "+e.getMessage());
+            throw new RuntimeException("Failed to update camp: "+e.getMessage());
         }
     }
 

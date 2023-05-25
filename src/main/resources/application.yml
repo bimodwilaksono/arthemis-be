@@ -21,3 +21,5 @@ spring:
     jwt:
       secret: "Token"
       expiration: 600000
+upload:
+  path: ${FILE_PATH}

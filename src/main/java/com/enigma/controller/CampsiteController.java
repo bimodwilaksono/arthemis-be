@@ -1,13 +1,19 @@
 package com.enigma.controller;
 
 import com.enigma.model.Campsite;
+import com.enigma.model.DTO.CampsiteRequest;
 import com.enigma.model.response.CommonResponse;
 import com.enigma.model.response.SuccessResponse;
 import com.enigma.service.CampsiteService;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +24,12 @@ public class CampsiteController {
 
     private final CampsiteService campsiteService;
 
+    private ModelMapper modelMapper;
+
     @Autowired
-    public CampsiteController(CampsiteService campsiteService) {
+    public CampsiteController(CampsiteService campsiteService, ModelMapper modelMapper) {
         this.campsiteService = campsiteService;
+        this.modelMapper = modelMapper;
     }
     @GetMapping
     public ResponseEntity getAllCamps(
@@ -42,14 +51,16 @@ public class CampsiteController {
     }
 
     @PostMapping
-    public ResponseEntity createCampsite(@RequestBody Campsite campsite){
+    public ResponseEntity createCampsite(@Valid CampsiteRequest campsite){
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Campsite createCamp = campsiteService.save(campsite);
         CommonResponse commonResponse = new SuccessResponse<>("Success Creating new Campsite", createCamp);
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
     @PutMapping("/{id}")
-    public ResponseEntity updateCamp(@PathVariable("id") String id, @RequestBody Campsite campsite){
-        Campsite updateCamp = campsiteService.update(id, campsite);
+    public ResponseEntity updateCamp(@PathVariable("id") String id, @Valid CampsiteRequest campsite){
+        Campsite updateCamp = modelMapper.map(campsite, Campsite.class);
+        campsiteService.update(id, campsite);
         CommonResponse commonResponse = new SuccessResponse<>("Success updating product", updateCamp);
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
