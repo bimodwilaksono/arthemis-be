@@ -1,8 +1,8 @@
 package com.enigma.controller;
 
-import ch.qos.logback.core.model.Model;
+import com.enigma.model.DTO.ChangePassword;
 import com.enigma.model.DTO.ProfileUploadRequest;
-import com.enigma.model.DTO.UserRequest;
+import com.enigma.model.DTO.ChangeUserNameEmailRequest;
 import com.enigma.model.User;
 import com.enigma.model.response.CommonResponse;
 import com.enigma.model.response.SuccessResponse;
@@ -49,9 +49,9 @@ public class UserController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity updateUser(@PathVariable("id") String id, @RequestBody UserRequest user){
+    public ResponseEntity updateUser(@PathVariable("id") String id, @RequestBody ChangeUserNameEmailRequest user){
         User updateUser = modelMapper.map(user, User.class);
-        userService.update(id, user);
+        userService.updateNameAndEmail(id, user);
         CommonResponse commonResponse = new SuccessResponse<>("Success updating user", updateUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
@@ -61,6 +61,14 @@ public class UserController {
         User UpdateProfile = modelMapper.map(userRequest, User.class);
         userService.UpdateProfile(id, userRequest);
         CommonResponse commonResponse = new SuccessResponse<>("Success Updating user profile",UpdateProfile);
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+    }
+
+    @PatchMapping("{/id}")
+    public ResponseEntity updatPassword(@PathVariable("id") String id, @RequestBody ChangePassword changePassword){
+        User updatePassword = modelMapper.map(changePassword, User.class);
+        userService.updatePassword(id, changePassword);
+        CommonResponse commonResponse = new SuccessResponse<>("Success Updating user password",updatePassword);
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
 

@@ -1,8 +1,8 @@
 package com.enigma.service;
 
-import com.enigma.model.Campsite;
+import com.enigma.model.DTO.ChangePassword;
 import com.enigma.model.DTO.ProfileUploadRequest;
-import com.enigma.model.DTO.UserRequest;
+import com.enigma.model.DTO.ChangeUserNameEmailRequest;
 import com.enigma.model.User;
 import com.enigma.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,15 +45,24 @@ public class UserService {
         }
     }
 
-    public User update(String id, UserRequest user){
+    public User updateNameAndEmail(String id, ChangeUserNameEmailRequest user){
         try {
             User existingUser = findById(id);
             existingUser.setName(user.getName());
             existingUser.setEmail(user.getEmail());
-            existingUser.setPassword(user.getPassword());
             return userRepository.save(existingUser);
         }catch (Exception e){
-            throw new RuntimeException("Filed to update user: "+e.getMessage());
+            throw new RuntimeException("Failed to update user: "+e.getMessage());
+        }
+    }
+
+    public User updatePassword(String id, ChangePassword changePassword){
+        try{
+            User existingUser = findById(id);
+            existingUser.setPassword(changePassword.getPassword());
+            return userRepository.save(existingUser);
+        }catch (Exception e){
+            throw new RuntimeException("Failed to update password "+e.getMessage());
         }
     }
 
