@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService {
 
-    private UserRepository userRepository;
-    private ModelMapper modelMapper;
-    private JwtUtil jwtUtil;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+    private final JwtUtil jwtUtil;
 
     @Autowired
     public AuthService(UserRepository userRepository, ModelMapper modelMapper, JwtUtil jwtUtil) {

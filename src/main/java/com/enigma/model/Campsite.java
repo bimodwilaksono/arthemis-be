@@ -22,6 +22,7 @@ public class Campsite {
 
     private String province;
 
+    @Column(nullable = true)
     private String file;
 
     @OneToMany(cascade = CascadeType.ALL)

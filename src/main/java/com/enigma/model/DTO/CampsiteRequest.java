@@ -13,6 +13,4 @@ public class CampsiteRequest {
     @NotBlank
     private String province;
     private MultipartFile file;
-    private String orderId;
-    private String ratingId;
 }
