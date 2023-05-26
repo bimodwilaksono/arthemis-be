@@ -5,6 +5,7 @@ import com.enigma.model.DTO.ProfileUploadRequest;
 import com.enigma.model.DTO.ChangeUserNameEmailRequest;
 import com.enigma.model.User;
 import com.enigma.model.response.CommonResponse;
+import com.enigma.model.response.MessageResponse;
 import com.enigma.model.response.SuccessResponse;
 import com.enigma.service.UserService;
 import jakarta.validation.Valid;
@@ -65,12 +66,11 @@ public class UserController {
     }
 
     @PatchMapping("/change-password/{id}")
-    public ResponseEntity updatPassword(@PathVariable("id") String id, @RequestBody ChangePassword changePassword){
-        User updatePassword = modelMapper.map(changePassword, User.class);
+    public ResponseEntity<MessageResponse> updatPassword(@PathVariable("id") String id, @RequestBody ChangePassword changePassword){
         userService.updatePassword(id, changePassword);
-        CommonResponse commonResponse = new SuccessResponse<>("Success Updating user password",updatePassword);
-        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("200", "OK", "Success Updating user password"));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteUser(@PathVariable String id){

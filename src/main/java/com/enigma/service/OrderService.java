@@ -7,6 +7,7 @@ import com.enigma.model.User;
 import com.enigma.repository.CampsiteRepository;
 import com.enigma.repository.OrderRepository;
 import com.enigma.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,6 +57,7 @@ public class OrderService {
         }
     }
 
+    @Transactional
     public Order save(OrderRequest orderDto) {
         try{
             Optional<User> userOptional = userRepository.findById(orderDto.getUserId());
@@ -84,6 +86,7 @@ public class OrderService {
     }
 
 
+    @Transactional
     public Order update(String id, OrderRequest orderDto){
         try {
             Order existsOrder = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));

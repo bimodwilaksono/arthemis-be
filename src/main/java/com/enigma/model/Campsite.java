@@ -25,7 +25,7 @@ public class Campsite {
     @Column(nullable = true)
     private String file;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "campsite", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Order> order;
 

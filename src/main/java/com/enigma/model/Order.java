@@ -26,12 +26,12 @@ public class Order {
     private LocalDate checkOutDate;
 
     //Many To Many with Customer
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     //OneToOne with Campsite
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "campsite_id", referencedColumnName = "id")
     @JsonBackReference
     private Campsite campsite;

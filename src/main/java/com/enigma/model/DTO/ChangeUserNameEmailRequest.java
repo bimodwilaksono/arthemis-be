@@ -16,8 +16,4 @@ public class ChangeUserNameEmailRequest {
     String name;
     @NotNull
     String email;
-    @NotNull
-    String password;
-    MultipartFile ProfilePic;
-    Role role;
 }

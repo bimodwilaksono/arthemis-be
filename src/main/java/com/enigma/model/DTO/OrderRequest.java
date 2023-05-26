@@ -21,6 +21,4 @@ public class OrderRequest {
     private String userId;
 
     private String campsiteId;
-
-    private Payment payment;
 }

@@ -6,6 +6,7 @@ import com.enigma.model.DTO.RegisterRequest;
 import com.enigma.model.User;
 import com.enigma.model.response.SuccessResponse;
 import com.enigma.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,26 +22,26 @@ public class AuthController {
         this.authService = authService;
     }
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity register(@Valid @RequestBody RegisterRequest registerRequest){
         String token = authService.register(registerRequest);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Registration Success", token));
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity login(@Valid @RequestBody LoginRequest loginRequest){
         String token = authService.login(loginRequest);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Login Success", token));
     }
 
     @PostMapping("/login-admin")
-    public ResponseEntity loginAdmin(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity loginAdmin(@Valid @RequestBody LoginRequest loginRequest) {
         String token = authService.loginAdmin(loginRequest);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Login Success", token));
     }
 
 
     @PutMapping("/user-role")
-    public ResponseEntity changeUserRole(@RequestBody ChangeUserRoleRequest changeUserRoleRequest){
+    public ResponseEntity changeUserRole(@Valid @RequestBody ChangeUserRoleRequest changeUserRoleRequest){
         User updatedUser = authService.changeUserRole(changeUserRoleRequest.getUserId(), changeUserRoleRequest.getNewRole());
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("User role updated", updatedUser));
     }

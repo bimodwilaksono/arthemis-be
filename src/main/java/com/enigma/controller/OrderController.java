@@ -55,7 +55,7 @@ public class OrderController {
     }
 
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteOrder(@PathVariable String id){
         orderService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success deleting Order",null));
