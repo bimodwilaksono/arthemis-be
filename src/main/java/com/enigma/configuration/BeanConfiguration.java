@@ -1,5 +1,7 @@
 package com.enigma.configuration;
 
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
@@ -14,10 +16,8 @@ public class BeanConfiguration {
         return mapper;
     }
 
-//    @Bean
-//    public BCryptPasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-
-
+    @Bean
+    public Argon2 argon2() {
+        return Argon2Factory.create();
+    }
 }

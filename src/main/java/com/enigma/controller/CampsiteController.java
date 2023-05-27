@@ -58,7 +58,7 @@ public class CampsiteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
     @PutMapping("/{id}")
-    public ResponseEntity updateCamp(@PathVariable("id") String id, @Valid CampsiteRequest campsite){
+    public ResponseEntity updateCamp(@Valid @PathVariable("id") String id, @Valid CampsiteRequest campsite){
         Campsite updateCamp = modelMapper.map(campsite, Campsite.class);
         campsiteService.update(id, campsite);
         CommonResponse commonResponse = new SuccessResponse<>("Success updating product", updateCamp);

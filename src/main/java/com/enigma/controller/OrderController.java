@@ -5,6 +5,7 @@ import com.enigma.model.Order;
 import com.enigma.model.response.CommonResponse;
 import com.enigma.model.response.SuccessResponse;
 import com.enigma.service.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -41,14 +42,14 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity createOrder(@RequestBody OrderRequest orderDto){
+    public ResponseEntity createOrder(@Valid  @RequestBody OrderRequest orderDto){
         Order createdOrder = orderService.save(orderDto);
         CommonResponse commonResponse = new SuccessResponse<>("Success Creating new Order", createdOrder);
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateOrder(@PathVariable("id") String id, @RequestBody OrderRequest orderRequest){
+    public ResponseEntity updateOrder(@PathVariable("id") String id,@Valid @RequestBody OrderRequest orderRequest){
         Order updatedOrder = orderService.update(id, orderRequest);
         CommonResponse commonResponse = new SuccessResponse<>("Success updating Order", updatedOrder);
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);

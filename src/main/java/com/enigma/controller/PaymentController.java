@@ -53,7 +53,7 @@ public class PaymentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteOrder(@PathVariable String id){
         paymentService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success deleting payment",null));

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -63,7 +64,7 @@ public class CampsiteService {
         try{
             String filePath = "";
 
-            if (!campsiteRequest.getFile().isEmpty()){
+            if (Objects.nonNull(campsiteRequest.getFile())){
                 filePath = fileService.uploadFile(campsiteRequest.getFile());
             }
             Campsite campsite = new Campsite();
@@ -82,7 +83,7 @@ public class CampsiteService {
             Campsite existingCamp = findById(id);
             String filePath = "";
 
-            if (!campsiteRequest.getFile().isEmpty()){
+            if (Objects.nonNull(campsiteRequest.getFile())){
                 filePath = fileService.uploadFile(campsiteRequest.getFile());
             }
             existingCamp.setName(campsiteRequest.getName());

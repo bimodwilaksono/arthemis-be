@@ -53,7 +53,7 @@ public class RatingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteOrder(@PathVariable String id){
         ratingService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success deleting rating",null));
