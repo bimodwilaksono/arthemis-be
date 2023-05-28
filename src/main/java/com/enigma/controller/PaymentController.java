@@ -1,6 +1,7 @@
 package com.enigma.controller;
 
 import com.enigma.model.Payment;
+import com.enigma.model.request.PaymentRequest;
 import com.enigma.model.response.CommonResponse;
 import com.enigma.model.response.SuccessResponse;
 import com.enigma.service.PaymentService;
@@ -39,22 +40,22 @@ public class PaymentController {
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
 
-    @PostMapping
-    public ResponseEntity createOrder(@RequestBody Payment payment){
-        Payment createPayment = paymentService.save(payment);
-        CommonResponse commonResponse = new SuccessResponse<>("Success Creating new payment", createPayment);
-        return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
-    }
+//    @PostMapping
+//    public ResponseEntity createPayment(@RequestBody Payment payment){
+//        Payment createPayment = paymentService.save(payment);
+//        CommonResponse commonResponse = new SuccessResponse<>("Success Creating new payment", createPayment);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
+//    }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateOrder(@PathVariable("id") String id, @RequestBody Payment payment){
+    public ResponseEntity updatePayment(@PathVariable("id") String id, @RequestBody PaymentRequest payment){
         Payment update = paymentService.update(id, payment);
         CommonResponse commonResponse = new SuccessResponse<>("Success updating payment", update);
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteOrder(@PathVariable String id){
+    public ResponseEntity deletePayment(@PathVariable String id){
         paymentService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success deleting payment",null));
     }

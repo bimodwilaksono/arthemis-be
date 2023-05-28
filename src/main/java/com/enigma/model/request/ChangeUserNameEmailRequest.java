@@ -1,12 +1,8 @@
-package com.enigma.model.DTO;
+package com.enigma.model.request;
 
-import com.enigma.utils.constants.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Value;
-import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class ChangeUserNameEmailRequest {

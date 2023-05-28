@@ -1,8 +1,8 @@
 package com.enigma.controller;
 
-import com.enigma.model.DTO.ChangeUserRoleRequest;
-import com.enigma.model.DTO.LoginRequest;
-import com.enigma.model.DTO.RegisterRequest;
+import com.enigma.model.request.ChangeUserRoleRequest;
+import com.enigma.model.request.LoginRequest;
+import com.enigma.model.request.RegisterRequest;
 import com.enigma.model.User;
 import com.enigma.model.response.SuccessResponse;
 import com.enigma.service.AuthService;

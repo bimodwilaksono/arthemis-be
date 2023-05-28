@@ -2,6 +2,7 @@ package com.enigma.service;
 
 import com.enigma.model.Order;
 import com.enigma.model.Payment;
+import com.enigma.model.request.PaymentRequest;
 import com.enigma.repository.PaymentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,29 +47,30 @@ public class PaymentService {
             throw new RuntimeException("Failed to find payment by id, "+ e.getMessage() );
         }
     }
-    @Transactional
-    public Payment save(Payment payment){
-        try {
-            orderService.findById(payment.getOrder().getId());
-            return paymentRepository.save(payment);
-        }catch (Exception e){
-            throw new RuntimeException("Failed to create Payment, "+e.getMessage());
-        }
-    }
+//    @Transactional
+//    public Payment save(Payment payment){
+//        try {
+//            orderService.findById(payment.getOrder().getId());
+//            return paymentRepository.save(payment);
+//        }catch (Exception e){
+//            throw new RuntimeException("Failed to create Payment, "+e.getMessage());
+//        }
+//    }
 
     @Transactional
-    public Payment update(String id, Payment payment){
+    public Payment update(String id, PaymentRequest paymentRequest){
         try {
             Payment existingPayment = findById(id);
-            existingPayment.setPaymentMethod(payment.getPaymentMethod());
-            existingPayment.setStatus(existingPayment.getStatus());
-            existingPayment.setAmount(existingPayment.getAmount());
+            existingPayment.setPaymentMethod(paymentRequest.getPaymentMethod());
+            existingPayment.setStatus(paymentRequest.getStatus());
+            existingPayment.setAmount(paymentRequest.getAmount());
 
             return paymentRepository.save(existingPayment);
         }catch (Exception e){
             throw new RuntimeException("Failed to Update Payment, "+e.getMessage());
         }
     }
+
 
     public void delete(String id){
         try{

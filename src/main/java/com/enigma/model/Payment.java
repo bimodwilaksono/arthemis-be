@@ -1,5 +1,7 @@
 package com.enigma.model;
 
+import com.enigma.utils.constants.PaymentMethod;
+import com.enigma.utils.constants.PaymentStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,16 +17,14 @@ public class Payment {
     @Id @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
     @Column(name = "payment_method")
-    @NotBlank(message = "Payment method should be filled")
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
     @Column(name = "amount")
     @NotNull(message = "Amount should be filled")
     private Integer amount;
     @Column(name = "status")
-    @NotBlank(message = "status should be filled")
-    private String status;
-    @OneToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
-    private Order order;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
 }

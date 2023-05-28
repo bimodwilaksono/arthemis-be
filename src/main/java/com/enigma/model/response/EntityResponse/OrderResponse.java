@@ -1,24 +1,26 @@
-package com.enigma.model.DTO;
+package com.enigma.model.response.EntityResponse;
 
 import com.enigma.model.Campsite;
 import com.enigma.model.Payment;
 import com.enigma.model.User;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-public class OrderRequest {
+public class OrderResponse {
     private String id;
-
     private Boolean isCheckOut;
+
+    private Boolean isCheckIn;
 
     private LocalDate checkInDate;
 
     private LocalDate checkOutDate;
 
-    private String userId;
+    private User user;
 
-    private String campsiteId;
+    private Campsite campsite;
+
+    private Payment payment;
 }

@@ -1,6 +1,5 @@
-package com.enigma.model.DTO;
+package com.enigma.model.request;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 

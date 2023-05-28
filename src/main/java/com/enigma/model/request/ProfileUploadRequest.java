@@ -1,4 +1,4 @@
-package com.enigma.model.DTO;
+package com.enigma.model.request;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

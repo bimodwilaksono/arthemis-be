@@ -1,19 +1,16 @@
 package com.enigma.controller;
 
 import com.enigma.model.Campsite;
-import com.enigma.model.DTO.CampsiteRequest;
+import com.enigma.model.request.CampsiteRequest;
 import com.enigma.model.response.CommonResponse;
 import com.enigma.model.response.SuccessResponse;
 import com.enigma.service.CampsiteService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +28,7 @@ public class CampsiteController {
         this.campsiteService = campsiteService;
         this.modelMapper = modelMapper;
     }
+
     @GetMapping
     public ResponseEntity getAllCamps(
             @RequestParam(defaultValue = "1") Integer page,
@@ -39,6 +37,19 @@ public class CampsiteController {
             @RequestParam(defaultValue = "id") String sort
     ){
         Page<Campsite> campsiteList = campsiteService.findAll(page, size, direction, sort);
+        CommonResponse commonResponse = new SuccessResponse<>("Success Get All Campsite", campsiteList);
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity findCampsitesByProvince(
+            @RequestParam String province,
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size,
+            @RequestParam(required = false, defaultValue = "ASC") String direction,
+            @RequestParam(required = false, defaultValue = "name") String sort
+    ) {
+        Page<Campsite> campsiteList = campsiteService.findByProvince(province, page, size, direction, sort);
         CommonResponse commonResponse = new SuccessResponse<>("Success Get All Campsite", campsiteList);
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
@@ -52,11 +63,11 @@ public class CampsiteController {
 
     @PostMapping
     public ResponseEntity createCampsite(@Valid CampsiteRequest campsite){
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Campsite createCamp = campsiteService.save(campsite);
         CommonResponse commonResponse = new SuccessResponse<>("Success Creating new Campsite", createCamp);
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity updateCamp(@Valid @PathVariable("id") String id, @Valid CampsiteRequest campsite){
         Campsite updateCamp = modelMapper.map(campsite, Campsite.class);
@@ -70,4 +81,19 @@ public class CampsiteController {
         campsiteService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success deleting campsite",null));
     }
+
+    @PostMapping("/addLike/{id}")
+    public ResponseEntity addLike(@PathVariable String id) {
+        Campsite updatedCampsite = campsiteService.addLike(id);
+        CommonResponse commonResponse = new SuccessResponse<>("Successfully added like", updatedCampsite);
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+    }
+
+    @PostMapping("/removeLike/{id}")
+    public ResponseEntity removeLike(@PathVariable String id) {
+        Campsite updatedCampsite = campsiteService.removeLike(id);
+        CommonResponse commonResponse = new SuccessResponse<>("Successfully removed like", updatedCampsite);
+        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+    }
+
 }

@@ -1,7 +1,7 @@
 package com.enigma.service;
 
-import com.enigma.model.DTO.LoginRequest;
-import com.enigma.model.DTO.RegisterRequest;
+import com.enigma.model.request.LoginRequest;
+import com.enigma.model.request.RegisterRequest;
 import com.enigma.model.User;
 import com.enigma.repository.UserRepository;
 import com.enigma.utils.JwtUtil;
