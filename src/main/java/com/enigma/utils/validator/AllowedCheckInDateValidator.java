@@ -1,23 +1,24 @@
 package com.enigma.utils.validator;
 
-import com.enigma.model.Order;
+import com.enigma.model.request.OrderRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
 import static com.enigma.utils.constants.OrderConstant.MAX_MONTHS_AHEAD_OF_ARRIVAL;
 import static com.enigma.utils.constants.OrderConstant.MIN_DAYS_AHEAD_OF_ARRIVAL;
 
-
-public class AllowedCheckInDateValidator implements ConstraintValidator<AllowedCheckInDate, Order> {
+@Component
+public class AllowedCheckInDateValidator implements ConstraintValidator<AllowedCheckInDate, OrderRequest> {
     @Override
     public void initialize(AllowedCheckInDate constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
     @Override
-    public boolean isValid(Order order, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(OrderRequest order, ConstraintValidatorContext constraintValidatorContext) {
         if(order == null){
             return false;
         }

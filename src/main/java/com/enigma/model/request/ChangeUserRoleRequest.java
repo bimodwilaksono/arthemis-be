@@ -1,4 +1,4 @@
-package com.enigma.model.DTO;
+package com.enigma.model.request;
 
 import com.enigma.utils.constants.Role;
 import lombok.Data;

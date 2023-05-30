@@ -1,12 +1,15 @@
 package com.enigma.controller;
 
-import com.enigma.model.DTO.ChangePassword;
-import com.enigma.model.DTO.ProfileUploadRequest;
-import com.enigma.model.DTO.ChangeUserNameEmailRequest;
+import com.enigma.model.request.ChangePassword;
+import com.enigma.model.request.ProfileUploadRequest;
+import com.enigma.model.request.ChangeUserNameEmailRequest;
 import com.enigma.model.User;
 import com.enigma.model.response.CommonResponse;
+import com.enigma.model.response.MessageResponse;
 import com.enigma.model.response.SuccessResponse;
 import com.enigma.service.UserService;
+import com.enigma.utils.JwtUtil;
+import com.enigma.utils.constants.Role;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +24,13 @@ public class UserController {
 
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserController(UserService userService, ModelMapper modelMapper) {
+    public UserController(UserService userService, ModelMapper modelMapper, JwtUtil jwtUtil) {
         this.userService = userService;
         this.modelMapper = modelMapper;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping
@@ -33,9 +38,14 @@ public class UserController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(defaultValue = "ASC") String direction,
-            @RequestParam(defaultValue = "id") String sort
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestHeader("Authorization") String token
     ){
-        Page<User> userList = userService.findAll(page, size, direction, sort);
+        // Extract role from token
+        String bearerToken = token.substring(7); // Remove 'Bearer ' from token
+        Role role = jwtUtil.getRoleFromToken(bearerToken);
+
+        Page<User> userList = userService.findAll(page, size, direction, sort, role);
         CommonResponse commonResponse = new SuccessResponse<>("Success Get All user", userList);
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
@@ -49,7 +59,7 @@ public class UserController {
 
 
     @PatchMapping("/update-email/{id}")
-    public ResponseEntity updateUser(@PathVariable("id") String id, @RequestBody ChangeUserNameEmailRequest user){
+    public ResponseEntity updateUser(@PathVariable("id") String id,@Valid @RequestBody ChangeUserNameEmailRequest user){
         User updateUser = modelMapper.map(user, User.class);
         userService.updateNameAndEmail(id, user);
         CommonResponse commonResponse = new SuccessResponse<>("Success updating user", updateUser);
@@ -65,12 +75,11 @@ public class UserController {
     }
 
     @PatchMapping("/change-password/{id}")
-    public ResponseEntity updatPassword(@PathVariable("id") String id, @RequestBody ChangePassword changePassword){
-        User updatePassword = modelMapper.map(changePassword, User.class);
+    public ResponseEntity<MessageResponse> updatPassword(@PathVariable("id") String id,@Valid @RequestBody ChangePassword changePassword){
         userService.updatePassword(id, changePassword);
-        CommonResponse commonResponse = new SuccessResponse<>("Success Updating user password",updatePassword);
-        return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("200", "OK", "Success Updating user password"));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteUser(@PathVariable String id){

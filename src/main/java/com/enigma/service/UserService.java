@@ -1,10 +1,11 @@
 package com.enigma.service;
 
-import com.enigma.model.DTO.ChangePassword;
-import com.enigma.model.DTO.ProfileUploadRequest;
-import com.enigma.model.DTO.ChangeUserNameEmailRequest;
+import com.enigma.model.request.ChangePassword;
+import com.enigma.model.request.ProfileUploadRequest;
+import com.enigma.model.request.ChangeUserNameEmailRequest;
 import com.enigma.model.User;
 import com.enigma.repository.UserRepository;
+import com.enigma.utils.constants.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,15 +26,24 @@ public class UserService {
 
     public Page<User> findAll(
             Integer page, Integer size,
-            String direction, String sort
-    ){
-        try{
+            String direction, String sort,
+            Role role
+    ) {
+        try {
             Sort sortBy = Sort.by(Sort.Direction.valueOf(direction), sort);
-            Pageable pageable = PageRequest.of(page-1,size, sortBy);
-            Page<User> userList = (Page<User>) userRepository.findAll(pageable);
+            Pageable pageable = PageRequest.of(page - 1, size, sortBy);
+            Page<User> userList;
+
+            // Filter users by role
+            if (role == Role.User) {
+                userList = userRepository.findByRole(role, pageable);
+            } else {
+                userList = userRepository.findAll(pageable);
+            }
+
             return userList;
-        }catch (Exception e){
-            throw new RuntimeException("Failed to find all user: "+ e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to find all users: " + e.getMessage());
         }
     }
 

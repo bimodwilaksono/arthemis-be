@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = {})
+@Constraint(validatedBy = {CheckInBeforeCheckOutValidator.class})
 @Documented
 public @interface CheckInBeforeCheckOut {
     String message() default "CheckIn date must be before CheckOut date";

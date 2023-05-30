@@ -1,12 +1,8 @@
 package com.enigma.service;
 
 import com.enigma.model.Campsite;
-import com.enigma.model.DTO.CampsiteRequest;
-import com.enigma.model.Order;
-import com.enigma.model.Rating;
+import com.enigma.model.request.CampsiteRequest;
 import com.enigma.repository.CampsiteRepository;
-import com.enigma.repository.OrderRepository;
-import com.enigma.repository.RatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,26 +10,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class CampsiteService {
 
     private final CampsiteRepository campsiteRepository;
-    private final OrderRepository orderRepository;
-    private final RatingRepository ratingRepository;
     private final FileService fileService;
 
     @Autowired
     public CampsiteService(CampsiteRepository campsiteRepository,
-                           OrderRepository orderRepository,
-                           RatingRepository ratingRepository,
                            FileService fileService) {
         this.campsiteRepository = campsiteRepository;
-        this.orderRepository = orderRepository;
-        this.ratingRepository = ratingRepository;
         this.fileService = fileService;
     }
 
@@ -51,6 +40,20 @@ public class CampsiteService {
         }
     }
 
+    public Page<Campsite> findByProvince(
+            String province,
+            Integer page, Integer size,
+            String direction, String sort
+    ){
+        try {
+            Sort sortBy = Sort.by(Sort.Direction.valueOf(direction), sort);
+            Pageable pageable = PageRequest.of(page-1,size, sortBy);
+            return campsiteRepository.findByProvinceIgnoreCase(province, pageable);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to find camp by province: " + e.getMessage());
+        }
+    }
+
     public Campsite findById(String id){
         try{
             return campsiteRepository.findById(id).orElseThrow(() -> new RuntimeException("id: "+id+" Does Not Exists"));
@@ -63,13 +66,15 @@ public class CampsiteService {
         try{
             String filePath = "";
 
-            if (!campsiteRequest.getFile().isEmpty()){
+            if (Objects.nonNull(campsiteRequest.getFile())){
                 filePath = fileService.uploadFile(campsiteRequest.getFile());
             }
             Campsite campsite = new Campsite();
             campsite.setName(campsiteRequest.getName());
             campsite.setAddress(campsiteRequest.getAddress());
             campsite.setProvince(campsiteRequest.getProvince());
+            campsite.setPrice(campsiteRequest.getPrice());
+            campsite.setLikeCount(0);
             campsite.setFile(filePath);
             return campsiteRepository.save(campsite);
         }catch (Exception e){
@@ -82,12 +87,13 @@ public class CampsiteService {
             Campsite existingCamp = findById(id);
             String filePath = "";
 
-            if (!campsiteRequest.getFile().isEmpty()){
+            if (Objects.nonNull(campsiteRequest.getFile())){
                 filePath = fileService.uploadFile(campsiteRequest.getFile());
             }
             existingCamp.setName(campsiteRequest.getName());
             existingCamp.setAddress(campsiteRequest.getAddress());
             existingCamp.setProvince(campsiteRequest.getProvince());
+            existingCamp.setPrice(campsiteRequest.getPrice());
             existingCamp.setFile(filePath);
 
 
@@ -105,4 +111,27 @@ public class CampsiteService {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public Campsite addLike(String id){
+        try{
+            Campsite existingCampsite = campsiteRepository.findById(id).orElseThrow(() -> new RuntimeException("Campsite with id: "+id+" Does Not Exists"));
+            int currentLikes = existingCampsite.getLikeCount();
+            existingCampsite.setLikeCount(currentLikes + 1);
+            return campsiteRepository.save(existingCampsite);
+        }catch (Exception e){
+            throw new RuntimeException("Failed to add like: "+ e.getMessage());
+        }
+    }
+
+    public Campsite removeLike(String id){
+        try{
+            Campsite existingCampsite = campsiteRepository.findById(id).orElseThrow(() -> new RuntimeException("Campsite with id: "+id+" Does Not Exists"));
+            int currentLikes = existingCampsite.getLikeCount();
+            existingCampsite.setLikeCount(currentLikes - 1);
+            return campsiteRepository.save(existingCampsite);
+        }catch (Exception e){
+            throw new RuntimeException("Failed to remove like: "+ e.getMessage());
+        }
+    }
+
 }

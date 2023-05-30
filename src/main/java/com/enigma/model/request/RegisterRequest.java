@@ -1,4 +1,4 @@
-package com.enigma.model.DTO;
+package com.enigma.model.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

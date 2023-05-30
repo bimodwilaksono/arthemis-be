@@ -1,6 +1,7 @@
 package com.enigma.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class Order {
     private String id;
 
     private Boolean isCheckOut;
+    private Boolean isCheckIn;
 
     @Column(name = "checkin_date")
     private LocalDate checkInDate;
@@ -26,20 +28,19 @@ public class Order {
     private LocalDate checkOutDate;
 
     //Many To Many with Customer
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     //OneToOne with Campsite
-    @ManyToOne
+    @JsonManagedReference
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "campsite_id", referencedColumnName = "id")
-    @JsonBackReference
     private Campsite campsite;
 
 
-//    //OneToOne with Payment
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    //    //OneToOne with Payment
+    @OneToOne
+    @JoinColumn(name = "payment_id", referencedColumnName = "id")
     private Payment payment;
-
-
 }
