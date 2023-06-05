@@ -11,7 +11,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -23,3 +23,6 @@ spring:
       expiration: 600000
 upload:
   path: ${FILE_PATH}
+midtrans:
+  serverKey: ${SERVER_KEY}
+  clientKey: ${CLIENT_KEY}

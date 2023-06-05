@@ -82,14 +82,14 @@ public class CampsiteController {
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success deleting campsite",null));
     }
 
-    @PostMapping("/addLike/{id}")
+    @PatchMapping("/addLike/{id}")
     public ResponseEntity addLike(@PathVariable String id) {
         Campsite updatedCampsite = campsiteService.addLike(id);
         CommonResponse commonResponse = new SuccessResponse<>("Successfully added like", updatedCampsite);
         return ResponseEntity.status(HttpStatus.OK).body(commonResponse);
     }
 
-    @PostMapping("/removeLike/{id}")
+    @PatchMapping("/removeLike/{id}")
     public ResponseEntity removeLike(@PathVariable String id) {
         Campsite updatedCampsite = campsiteService.removeLike(id);
         CommonResponse commonResponse = new SuccessResponse<>("Successfully removed like", updatedCampsite);

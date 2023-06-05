@@ -14,9 +14,10 @@ public class JwtUtil {
     @Value("600000")
     private Integer JwtExpiration;
 
-    public String generateToken(String subject, Role role){
+    public String generateToken(String subject, Role role, String id){
         JwtBuilder builder = Jwts.builder()
                 .setSubject(subject)
+                .setId(id)
                 .claim("role", role.toString())
                 .setIssuedAt(new Date())
                 .signWith(SignatureAlgorithm.HS256, JwtSecret)
@@ -50,6 +51,11 @@ public class JwtUtil {
     public String getEmailFromToken(String token){
         Claims claims = Jwts.parser().setSigningKey(JwtSecret).parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
+
+    public String getIdFromToken(String token){
+        Claims claims = Jwts.parser().setSigningKey(JwtSecret).parseClaimsJws(token).getBody();
+        return claims.getId();
     }
 
 }

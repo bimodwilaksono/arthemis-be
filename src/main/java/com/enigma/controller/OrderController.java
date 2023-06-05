@@ -67,7 +67,11 @@ public class OrderController {
 
 
     @PostMapping
-    public ResponseEntity createOrder(@Valid  @RequestBody OrderRequest orderDto){
+
+    public ResponseEntity createOrder(@Valid  @RequestBody OrderRequest orderDto, @RequestHeader("Authorization") String token ){
+        String bearerToken = token.substring(7); // Remove 'Bearer ' from token
+        String userId = jwtUtil.getIdFromToken(bearerToken);
+        orderDto.setUserId(userId);
         Order createdOrder = orderService.save(orderDto);
         CommonResponse commonResponse = new SuccessResponse<>("Success Creating new Order", createdOrder);
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);

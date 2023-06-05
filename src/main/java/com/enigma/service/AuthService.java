@@ -37,7 +37,7 @@ public class AuthService {
             user.setRole(Role.User);
             User userRequest = userRepository.save(user);
 
-            String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+            String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
             return token;
         }catch (DataAccessException e){
             throw new EntityExistsException(e.getMessage());
@@ -52,7 +52,7 @@ public class AuthService {
             if (!passEncoder.verifyPassword(user.getPassword(), loginRequest.getPassword())) {
                 throw new RuntimeException("email or password is incorrect");
             }
-            String token = jwtUtil.generateToken(loginRequest.getEmail(), user.getRole());
+            String token = jwtUtil.generateToken(loginRequest.getEmail(), user.getRole(), user.getId());
             return token;
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
@@ -73,7 +73,7 @@ public class AuthService {
                 throw new RuntimeException("You do not have admin privileges");
             }
 
-            String token = jwtUtil.generateToken(loginRequest.getEmail(), user.getRole());
+            String token = jwtUtil.generateToken(loginRequest.getEmail(), user.getRole(), user.getId());
             return token;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
