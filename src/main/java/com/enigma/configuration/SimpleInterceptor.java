@@ -18,7 +18,7 @@ import java.util.Map;
 @Component
 public class SimpleInterceptor implements HandlerInterceptor {
     private final Map<String, List<String>> ADMIN_ONLY_URIS;
-    private static final List<String> OPEN_ENDPOINTS = Arrays.asList("/api/v1/login","/api/v1/login-admin", "/api/v1/register", "/swagger-ui/index.html");
+    private static final List<String> OPEN_ENDPOINTS = Arrays.asList("/api/v1/login", "/api/v1/login-admin", "/api/v1/register", "/swagger-ui/index.html", "/api/v1/payment/checkout");
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -40,7 +40,7 @@ public class SimpleInterceptor implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         if (token == null) throw new RuntimeException("Token Needed");
         String[] bearerToken = token.split(" ");
-        if (!jwtUtil.validateToken(bearerToken[1])){
+        if (!jwtUtil.validateToken(bearerToken[1])) {
             throw new RuntimeException("Invalid Token");
         }
 
@@ -58,7 +58,7 @@ public class SimpleInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,@Nullable ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
         System.out.println("Post handle");
     }
 

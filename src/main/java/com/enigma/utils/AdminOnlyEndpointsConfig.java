@@ -15,7 +15,7 @@ public class AdminOnlyEndpointsConfig {
         this.ADMIN_ONLY_URIS = new HashMap<>();
         ADMIN_ONLY_URIS.put("/api/v1/campsite", Arrays.asList( "POST","PUT", "DELETE"));
         ADMIN_ONLY_URIS.put("/api/v1/order", Arrays.asList("PUT", "DELETE"));
-        ADMIN_ONLY_URIS.put("/api/v1/payment", Arrays.asList("PUT", "DELETE"));
+//        ADMIN_ONLY_URIS.put("/api/v1/payment", Arrays.asList("PUT", "DELETE"));
     }
 
     public Map<String, List<String>> getAdminOnlyUris() {
