@@ -18,7 +18,7 @@ import java.util.Map;
 @Component
 public class SimpleInterceptor implements HandlerInterceptor {
     private final Map<String, List<String>> ADMIN_ONLY_URIS;
-    private static final List<String> OPEN_ENDPOINTS = Arrays.asList("/api/v1/login", "/api/v1/login-admin", "/api/v1/register", "/swagger-ui/index.html", "/api/v1/payment/checkout");
+    private static final List<String> OPEN_ENDPOINTS = Arrays.asList("/api/v1/login", "/api/v1/login-admin", "/api/v1/register", "/swagger-ui/index.html", "/api/v1/payment/checkout", "/api/v1/refreshtoken");
 
     @Autowired
     private JwtUtil jwtUtil;

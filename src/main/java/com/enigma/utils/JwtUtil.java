@@ -1,5 +1,6 @@
 package com.enigma.utils;
 
+import com.enigma.exceptions.TokenRefreshException;
 import com.enigma.utils.constants.Role;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +12,7 @@ import java.util.Date;
 public class JwtUtil {
     @Value("Token")
     private String JwtSecret;
-    @Value("600000")
+    @Value("${spring.jpa.jwt.expiration}")
     private Integer JwtExpiration;
 
     public String generateToken(String subject, Role role, String id){
@@ -33,7 +34,7 @@ public class JwtUtil {
         } catch (MalformedJwtException e){
             throw new RuntimeException("Invalid JWT token");
         } catch (ExpiredJwtException e){
-            throw new RuntimeException("Expired JWT token");
+            throw new TokenRefreshException(null, "Expired JWT token");
         } catch (UnsupportedJwtException e){
             throw new RuntimeException("Unsupported JWT token");
         } catch (IllegalArgumentException e){
