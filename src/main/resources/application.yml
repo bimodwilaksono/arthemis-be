@@ -21,6 +21,7 @@ spring:
     jwt:
       secret: "Token"
       expiration: 600000
+      refreshExpiration: 1200000000
 upload:
   path: ${FILE_PATH}
 midtrans:

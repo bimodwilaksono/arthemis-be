@@ -11,7 +11,7 @@ import java.util.Date;
 public class JwtUtil {
     @Value("Token")
     private String JwtSecret;
-    @Value("600000")
+    @Value("${spring.jpa.jwt.expiration}")
     private Integer JwtExpiration;
 
     public String generateToken(String subject, Role role, String id){
